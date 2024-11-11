@@ -10,6 +10,7 @@ func NewRouter(services *Services) *http.ServeMux {
 	userHandler := NewUserHandler(services.UserService)
 
 	mux.HandleFunc("/user", userHandler.StoreUser)
+	mux.HandleFunc("/users", userHandler.GetUserList)
 
 	return mux
 }

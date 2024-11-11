@@ -1,1 +1,0 @@
-INSERT INTO users (email, password, created_at, updated_at)

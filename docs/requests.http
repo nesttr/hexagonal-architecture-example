@@ -1,0 +1,12 @@
+
+POST {{ url }}/user
+Content-Type: application/json
+
+{
+  "email": "example@example.com",
+  "password": "Password"
+}
+
+###
+
+GET {{ url }}/users

@@ -1,24 +1,31 @@
 package http
 
 import (
-	"database/sql"
+	_ "github.com/lib/pq"
+	"hexagonal-architecture-example/internal/adapters/handlers/infrastructure"
+	UserRepository "hexagonal-architecture-example/internal/adapters/repositories/postgres/user"
 	"log"
 	"net/http"
-	UserRepository "odev-1/internal/adapters/repositories/postgres/user"
 )
 
-func main() {
-	db, err := sql.Open("postgres", "postgres://user:password@localhost/dbname?sslmode=disable")
-	if err != nil {
-		log.Fatal("Failed to connect to PostgreSQL:", err)
-	}
-	defer db.Close()
+type Serve struct {
+	Port     string
+	Postgres infrastructure.Sql
+}
 
+func ListenServe(Serve Serve) {
+	db := infrastructure.Init(Serve.Postgres)
+	defer db.Close()
 	userRepository := UserRepository.NewUserRepository(db)
 
 	services := NewServices(userRepository)
 	router := NewRouter(services)
 
-	log.Println("Server is running on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Println("Server is running on port "+Serve.Port, "...")
+
+	err := http.ListenAndServe(":"+Serve.Port, router)
+	if err != nil {
+		return
+	}
+
 }

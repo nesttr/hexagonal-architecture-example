@@ -2,9 +2,9 @@ package user
 
 import (
 	"context"
-	"odev-1/internal/core/domains/user"
-	"odev-1/internal/core/domains/user/objects"
-	"odev-1/internal/core/ports"
+	"hexagonal-architecture-example/internal/core/domains/user"
+	"hexagonal-architecture-example/internal/core/domains/user/objects"
+	"hexagonal-architecture-example/internal/core/ports"
 )
 
 type StoreRequest struct {
@@ -17,17 +17,24 @@ type StoreResponse struct {
 	Email    string
 	Password string
 }
+type GetListResponse struct {
+	Data []user.List
+}
 
 type Service struct {
 	userRepository ports.UserRepository
 }
 
+func (s *Service) GetUserList(ctx context.Context) (GetListResponse, error) {
+	list, err := s.userRepository.GetList(ctx)
+	return GetListResponse{Data: list}, err
+}
+
 func (s *Service) CreateAccount(ctx context.Context, req StoreRequest) (StoreResponse, error) {
 
 	email := objects.Email(req.Email)
-	password := objects.Password(req.Password)
 
-	generateNewUser := user.New(email, password)
+	generateNewUser := user.New(email, req.Password)
 
 	lastInsertId, err := s.userRepository.Store(ctx, generateNewUser)
 	if err != nil {

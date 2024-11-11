@@ -2,9 +2,11 @@ package ports
 
 import (
 	"context"
-	"odev-1/internal/core/domains/user"
+	"hexagonal-architecture-example/internal/core/domains/user"
 )
 
 type UserRepository interface {
 	Store(ctx context.Context, user user.User) (int64, error)
+	CreateTable(ctx context.Context)
+	GetList(ctx context.Context) ([]user.List, error)
 }

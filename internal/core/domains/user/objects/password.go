@@ -12,7 +12,7 @@ type Password string
 
 var SaltReadError = errors.New("salt read error")
 
-func newPassword(password string) (Password, error) {
+func NewPassword(password string) (Password, error) {
 	salt := make([]byte, 16)
 	hash := sha256.New()
 

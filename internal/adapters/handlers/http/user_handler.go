@@ -2,9 +2,9 @@ package http
 
 import (
 	"encoding/json"
+	userDomain "hexagonal-architecture-example/internal/core/domains/user"
+	userService "hexagonal-architecture-example/internal/core/services/user"
 	"net/http"
-	userDomain "odev-1/internal/core/domains/user"
-	userService "odev-1/internal/core/services/user"
 )
 
 type UserHandler struct {
@@ -13,6 +13,20 @@ type UserHandler struct {
 
 func NewUserHandler(service *userService.Service) *UserHandler {
 	return &UserHandler{service: service}
+}
+
+func (h *UserHandler) GetUserList(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	userList, _ := h.service.GetUserList(r.Context())
+
+	err := json.NewEncoder(w).Encode(userList)
+	if err != nil {
+		return
+	}
 }
 
 func (h *UserHandler) StoreUser(w http.ResponseWriter, r *http.Request) {

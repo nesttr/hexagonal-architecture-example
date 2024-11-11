@@ -1,8 +1,8 @@
 package http
 
 import (
-	"odev-1/internal/core/ports"
-	"odev-1/internal/core/services/user"
+	"hexagonal-architecture-example/internal/core/ports"
+	"hexagonal-architecture-example/internal/core/services/user"
 )
 
 type Services struct {
